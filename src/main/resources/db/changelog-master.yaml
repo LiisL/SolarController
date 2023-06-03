@@ -1,0 +1,5 @@
+# Initial schema including
+databaseChangeLog:
+    - include:
+          file: /changelog/001-test.sql
+          relativeToChangelogFile: true
