@@ -5,8 +5,8 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class EleringPrice {
+public class EleringPriceResponse {
 
-    private Long timestamp;
-    private Double price;
+    private boolean success;
+    private EleringPriceData data;
 }

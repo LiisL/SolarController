@@ -3,13 +3,13 @@ package ee.liis.solar.controller.service;
 import ee.liis.solar.controller.persistance.PriceForHour;
 import ee.liis.solar.controller.persistance.PriceForHourRepository;
 import ee.liis.solar.controller.service.elering.EleringPrice;
+import ee.liis.solar.controller.service.elering.EleringService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,11 +25,10 @@ public class PriceCheckingService {
         List<EleringPrice> pricesFromElering = eleringService.getPricesForTheNext24h();
 
         for (EleringPrice eleringPrice: pricesFromElering) {
-            boolean priceNotInDb = false;
-            // TODO calculate priceNotInDb for real
-            if (priceNotInDb) {
+            Optional<PriceForHour> priceFromDb = priceForHourRepository.findByPriceTimestamp(eleringPrice.getTimestamp());
+            if (priceFromDb.isEmpty()) {
                 PriceForHour price =  new PriceForHour();
-                price.setPriceTimestamp(eleringPrice.getPriceTimestamp());
+                price.setPriceTimestamp(eleringPrice.getTimestamp());
                 price.setPrice(eleringPrice.getPrice());
                 priceForHourRepository.save(price);
              }
